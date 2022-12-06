@@ -1,23 +1,22 @@
 # frozen_string_literal: true
 
-read_stack = false
+stacks = nil
 rows = []
 File.foreach('input') do |line|
   if line.chomp == ''
-    rows = rows.transpose.map do |row|
+    stacks = rows.transpose.map do |row|
       row.pop
       row.reverse.reject(&:nil?)
     end
 
-    read_stack = true
     next
   end
 
-  if read_stack
+  if stacks
     num_to_move, from_stack_i, to_stack_i = line.split(' ').select { |piece| piece =~ /\A\d+\Z/ }.map(&:to_i)
 
-    from_stack = rows[from_stack_i - 1]
-    to_stack = rows[to_stack_i - 1]
+    from_stack = stacks[from_stack_i - 1]
+    to_stack = stacks[to_stack_i - 1]
 
     # moves crate one at a time
     # while num_to_move.positive?
@@ -41,5 +40,4 @@ File.foreach('input') do |line|
   end
 end
 
-# puts rows.inspect
-puts rows.map(&:pop).join('')
+puts stacks&.map(&:pop)&.join('')
